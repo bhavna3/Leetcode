@@ -10,4 +10,4 @@ class Solution:
                 goal = i
 
         #check if we can reach from first index
-        return True if goal == 0 else False #return goal == 0     
+        return True if goal == 0 else False   
