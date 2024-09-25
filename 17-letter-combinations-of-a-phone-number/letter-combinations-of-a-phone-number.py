@@ -1,7 +1,7 @@
 class Solution:
     def letterCombinations(self, digits: str) -> List[str]:
         if not digits:
-            return {}
+            return []
 
         phone_map = {
             '2': 'abc',
