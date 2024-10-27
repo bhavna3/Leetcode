@@ -1,35 +1,48 @@
 class Solution:
     def solveNQueens(self, n: int) -> List[List[str]]:
-        state= [["."] * n for _ in range(n)] # start with empty board
-        res=[]
-        visited_cols=set()
-    
-        visited_diagonals=set()
-        
-        visited_antidiagonals=set()
-        
-        def backtrack(r):
-            if r==n:                
-                res.append(["".join(row) for row in state])
-                return
-            
-            for c in range(n):
-                diff=r-c
-                _sum=r+c
-                
-                
-                if not (c in visited_cols or diff in visited_diagonals or _sum in visited_antidiagonals):                    
-                    visited_cols.add(c)
-                    visited_diagonals.add(diff)
-                    visited_antidiagonals.add(_sum)
-                    state[r][c]='Q' # place the queen
-                    backtrack(r+1) 
+        if n == 1:
+            return [["Q"]]
+        if n == 2 or n == 3:
+            return []
 
-     
-                    visited_cols.remove(c)
-                    visited_diagonals.remove(diff)
-                    visited_antidiagonals.remove(_sum)
-                    state[r][c]='.'                                
+        results = []
+        solution = [-1] * n
+        self.solveNQueensRec(n, solution, 0, results)
+        return results
 
-        backtrack(0)
-        return res 
+    def solveNQueensRec(
+        self, n: int, solution: List[int], row: int, results: List[List[str]]
+    ):
+        if row == n:
+            results.append(self.constructSolutionString(solution))
+            return
+
+        for col in range(n):
+            if self.isValidMove(row, col, solution):
+                solution[row] = col
+                self.solveNQueensRec(n, solution, row + 1, results)
+                solution[row] = -1  # Backtrack
+
+    def isValidMove(
+        self, proposedRow: int, proposedCol: int, solution: List[int]
+    ) -> bool:
+        for i in range(proposedRow):
+            oldRow = i
+            oldCol = solution[i]
+            diagonalOffset = proposedRow - oldRow
+
+            if (
+                oldCol == proposedCol
+                or oldCol == proposedCol - diagonalOffset
+                or oldCol == proposedCol + diagonalOffset
+            ):
+                return False
+        return True
+
+    def constructSolutionString(self, solution: List[int]) -> List[str]:
+        board = []
+        for row in range(len(solution)):
+            row_str = ["."] * len(solution)
+            row_str[solution[row]] = "Q"
+            board.append("".join(row_str))
+        return board
