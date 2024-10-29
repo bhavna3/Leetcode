@@ -1,22 +1,16 @@
 class Solution:
     def combine(self, n: int, k: int) -> List[List[int]]:
 
-        ans, sol=[], []
-
-        def backtrack(x):
-
-            if len(sol)==k:
-                ans.append(sol[:])
+        def bt(start, path):
+            if len(path) == k:
+                results.append(path.copy()) #append a current copy of path as lists are mutable
                 return
-
-            left=x
-            need=k-len(sol)
-            if need<left:
-                backtrack(x-1)
-
-            sol.append(x)
-            backtrack(x-1)
-            sol.pop()
-
-        backtrack(n)
-        return ans
+            
+            for i in range(start, n+1):
+                path.append(i)
+                bt(i+1, path)
+                path.pop()
+        
+        results = []
+        bt(1, [])
+        return results
