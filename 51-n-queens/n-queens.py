@@ -1,9 +1,5 @@
 class Solution:
     def solveNQueens(self, n: int) -> List[List[str]]:
-        if n == 1:
-            return [["Q"]]
-        
-
         results = []
         solution = [-1] * n
         self.solveNQueensRec(n, solution, 0, results)
