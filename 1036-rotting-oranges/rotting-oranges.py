@@ -1,35 +1,46 @@
 class Solution:
     def orangesRotting(self, grid: List[List[int]]) -> int:
-        m, n = len(grid), len(grid[0])
-        visited = grid
-        q = collections.deque()
-        countFreshOrange = 0
-        for i in range(m):
-            for j in range(n):
-                if visited[i][j] == 2:
-                    q.append((i, j))
-                if visited[i][j] == 1:
-                    countFreshOrange += 1
-        if countFreshOrange == 0:
-            return 0
-        if not q:
-            return -1
-        
-        minutes = -1
-        dirs = [(1, 0), (-1, 0), (0, -1), (0, 1)]
+        ROWS, COLS = len(grid), len(grid[0])
+        q = list() # queue
+        count = -1
+
+        # Get all rotten oranges
+        for i in range(ROWS):
+            for j in range(COLS):
+                if grid[i][j] == 2:
+                    q.append([i,j])
+
+
         while q:
-            size = len(q)
-            while size > 0:
-                x, y = q.popleft()
-                size -= 1
-                for dx, dy in dirs:
-                    i, j = x + dx, y + dy
-                    if 0 <= i < m and 0 <= j < n and visited[i][j] == 1:
-                        visited[i][j] = 2
-                        countFreshOrange -= 1
-                        q.append((i, j))
-            minutes += 1
+
+            tmp = q.copy()
+            q.clear()
+
+            for i,j in tmp:
+
+                if i+1 < ROWS and grid[i+1][j] == 1:
+                    q.append([i+1, j])
+                    grid[i+1][j] = 2
+
+                if j+1 < COLS and grid[i][j+1] == 1:
+                    q.append([i, j+1])
+                    grid[i][j+1] = 2
+
+                if i-1 >= 0 and grid[i-1][j] == 1:
+                    q.append([i-1, j])
+                    grid[i-1][j] = 2
+
+                if j-1 >= 0 and grid[i][j-1] == 1:
+                    q.append([i, j-1])
+                    grid[i][j-1] = 2
+
+            count += 1
         
-        if countFreshOrange == 0:
-            return minutes
-        return -1        
+
+        for row in grid:
+            for col in row:
+                if col == 1:
+                    return -1
+            
+
+        return count if count >= 0 else 0
