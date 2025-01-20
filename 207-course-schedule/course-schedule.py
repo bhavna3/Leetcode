@@ -1,28 +1,23 @@
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        n=numCourses
-        adj = [[] for _ in range(n)]
-        indegree = [0] * n
-        ans = []
+        pre_to_nxt = collections.defaultdict(list)
+        nxt_to_pre = collections.defaultdict(list)
+        free_courses = set(range(numCourses))
+        for pre, nxt in prerequisites:
+            pre_to_nxt[pre].append(nxt)
+            nxt_to_pre[nxt].append(pre)
+            if nxt in free_courses:
+                free_courses.remove(nxt)
+        
+        while free_courses:
+  
+            course = free_courses.pop()
+            numCourses -= 1
+            for nxt in pre_to_nxt[course]:
+               
+                nxt_to_pre[nxt].remove(course)
+    
+                if len(nxt_to_pre[nxt]) == 0:
+                    free_courses.add(nxt)
 
-        for pair in prerequisites:
-            course = pair[0]
-            prerequisite = pair[1]
-            adj[prerequisite].append(course)
-            indegree[course] += 1
-
-        queue = deque()
-        for i in range(n):
-            if indegree[i] == 0:
-                queue.append(i)
-
-        while queue:
-            current = queue.popleft()
-            ans.append(current)
-
-            for next_course in adj[current]:
-                indegree[next_course] -= 1
-                if indegree[next_course] == 0:
-                    queue.append(next_course)
-
-        return len(ans) == n
+        return numCourses == 0
