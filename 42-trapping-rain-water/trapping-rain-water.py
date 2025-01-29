@@ -1,25 +1,21 @@
 class Solution:
     def trap(self, height: List[int]) -> int:
-        mh = max(height)
-        block_vol = sum(height)
+        left, right = 0, len(height) - 1
+        left_max, right_max = 0, 0
+        water = 0
 
-        left = 0
-        max_left = 0
-        while height[left] < mh:
-            if height[left] > max_left:
-                max_left = height[left]
-            
-            height[left] = max_left
-            left += 1
-        
-        right = len(height)-1
-        max_right = 0
-        while height[right] < mh:
-            if height[right] > max_right:
-                max_right = height[right]
-            
-            height[right] = max_right
-            right -= 1
-        
-        filled_vol = sum(height[0:left]+height[right:]) + (right-left)*mh
-        return filled_vol - block_vol   
+        while left <= right:
+            if height[left] <= height[right]:
+                if height[left] >= left_max:
+                    left_max = height[left]
+                else:
+                    water += left_max - height[left]
+                left += 1
+            else:
+                if height[right] >= right_max:
+                    right_max = height[right]
+                else:
+                    water += right_max - height[right]
+                right -= 1
+
+        return water
