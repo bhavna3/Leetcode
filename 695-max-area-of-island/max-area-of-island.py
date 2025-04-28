@@ -1,36 +1,15 @@
 class Solution:
     def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
-        rows = len(grid)
-        cols = len(grid[0])
-
-        visited = [[False] * cols for _ in range(rows)]
+        def dfs(i, j):
+            if i < 0 or i >= m or j < 0 or j >= n or grid[i][j] == 0:
+                return 0
+            grid[i][j] = 0
+            return 1 + dfs(i+1, j) + dfs(i-1, j) + dfs(i, j+1) + dfs(i, j-1)
         
-        directions = [
-            [0, 1],
-            [1, 0],
-            [0, -1],
-            [-1, 0]
-        ]
-
-        def validCell(r, c):
-            return 0 <= r < rows and 0 <= c < cols
-        
-        self.size = 0
-        def dfs(r, c):
-            visited[r][c] = True
-
-            for dr, dc in directions:
-                nR, nC = r + dr, c + dc
-                if validCell(nR, nC) and not visited[nR][nC] and grid[nR][nC] == 1:
-                    self.size += 1
-                    dfs(nR, nC)
-                    
-        maxIsland = 0
-        for r in range(rows):
-            for c in range(cols):
-                if not visited[r][c] and grid[r][c] == 1:
-                    dfs(r, c)
-                    maxIsland = max(maxIsland, self.size+1)
-                    self.size = 0
-        
-        return maxIsland   
+        m, n = len(grid), len(grid[0])
+        max_area = 0
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == 1:
+                    max_area = max(max_area, dfs(i, j))
+        return max_area
