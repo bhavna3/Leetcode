@@ -4,7 +4,6 @@ class Solution:
         cols = [set() for _ in range(9)]
         boxes = [set() for _ in range(9)]
 
-        # Initialize sets based on the initial board state
         for r in range(9):
             for c in range(9):
                 val = board[r][c]
@@ -33,7 +32,6 @@ class Solution:
                     if solve(row, col + 1):
                         return True
 
-                    # backtrack
                     board[row][col] = '.'
                     rows[row].remove(val)
                     cols[col].remove(val)
