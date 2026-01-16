@@ -1,23 +1,39 @@
 class Solution:
     def maxFrequency(self, nums: List[int], k: int, numOperations: int) -> int:
-        m = max(nums) + k
-        d = {}
-        f = {}
-        for n in nums:
-            f[n] = f.get(n, 0) + 1
-            l = max(n - k, 0)
-            r = min(n + k, m)
-            d[l] = d.get(l, 0) + 1
-            d[r + 1] = d.get(r + 1, 0) - 1
-            if n not in d:
-                d[n] = 0
-        r = 1
-        s = 0
-        for t in sorted(d.keys()):
-            d[t] += s
-            tf = f.get(t, 0)
-            c = d[t] - tf
-            mp = min(c, numOperations)
-            r = max(r, tf + mp)
-            s = d[t]
-        return r  
+        nums.sort()
+        n = len(nums)
+        if n == 0: 
+            return 0
+
+        l,r= 0,0
+        summ = 0
+        res = 0
+
+        l2 = 0
+        summ2 = 0
+
+        c = 0
+        prev = None
+
+        for num in nums:
+            if num == prev:
+                c += 1
+            else:
+                prev = num
+                c = 1
+            while nums[l] < num - k:
+                summ -= 1
+                l+= 1
+
+            while r < n and nums[r] <= num + k:
+                summ += 1
+                r += 1
+            res = max(res, c + min(summ - c, numOperations))
+
+            summ2 += 1
+            while nums[l2] < num - 2 * k:
+                summ2 -= 1
+                l2 += 1
+            res = max(res, min(summ2, numOperations))
+
+        return res 
