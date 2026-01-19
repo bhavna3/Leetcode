@@ -1,9 +1,11 @@
 class Solution:
     def letterCombinations(self, digits: str) -> List[str]:
-        if not digits:
-            return []
+        res=[]
 
-        phone_map = {
+
+        if not digits: return res
+        
+        mapp = {
             '2': 'abc',
             '3': 'def',
             '4': 'ghi',
@@ -13,20 +15,17 @@ class Solution:
             '8': 'tuv',
             '9': 'wxyz'
         }
-
-        res, sol =[], []
-
-        n= len(digits)
-
-        def backtrack(i):
-            if i==n:
-                res.append(''.join(sol))
+        
+        def backtrack(id, cur):
+            nonlocal res
+            if id == len(digits):
+                res.append(cur)
                 return
-
-            for letter in phone_map[digits[i]]:
-                sol.append(letter)
-                backtrack(i+1)
-                sol.pop()
-
-        backtrack(0)
-        return res      
+            
+            digit = digits[id]
+            letters = mapp[digit]
+            for letter in letters:
+                backtrack(id + 1, cur + letter)
+        
+        backtrack(0, "")
+        return res
